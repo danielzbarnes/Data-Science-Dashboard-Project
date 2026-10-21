@@ -7,7 +7,7 @@ import employee_events
 import QueryBase, Employee, Team
 
 # import the load_model function from the utils.py file
-import load_model from utils
+from utils import load_model
 
 """
 Below, we import the parent classes
