@@ -107,7 +107,7 @@ class LineChart(MatplotlibViz):
         
         # call the .plot method for the
         # cumulative counts dataframe
-        fig.plot(df, ax=ax, linewidth=3)
+        df.plot(ax=ax, linewidth=3)
         
         # pass the axis variable
         # to the `.set_axis_styling`
@@ -161,12 +161,12 @@ class BarChart(MatplotlibViz):
         # We want to visualize the mean of the predict_proba output
         pred = None
         if model.name == "team":
-            pred = data.mean()
+            pred = pred_proba.mean()
 
         # Otherwise set `pred` to the first value
         # of the predict_proba output
         else:
-            pred = data[0]
+            pred = pred_proba[0]
         
         # Initialize a matplotlib subplot
         fig, ax = plt.subplots(1, 1, figsize=(10, 5))
@@ -263,7 +263,7 @@ def get():
 # an ID of `2`. 
 # parameterize the employee ID 
 # to a string datatype
-@app.route('/employee/<string:id>')
+@app.route('/employee/{id}')
 def get_employee(id):
     
     # Call the initialized report
@@ -279,7 +279,7 @@ def get_employee(id):
 # an ID of `2`. 
 # parameterize the team ID 
 # to a string datatype
-@app.route('/team/<string:id>')
+@app.route('/team/{id}')
 def get_team(id):
 
     # Call the initialized report
