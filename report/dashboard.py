@@ -4,7 +4,7 @@ import pandas as pd
 
 # Import QueryBase, Employee, Team from employee_events
 import employee_events
-import QueryBase, Employee, Team
+from employee_events import QueryBase, Employee, Team
 
 # import the load_model function from the utils.py file
 from utils import load_model
@@ -30,24 +30,24 @@ class ReportDropdown(Dropdown):
     # Overwrite the build_component method
     # ensuring it has the same parameters
     # as the Report parent class's method
-    def build_component(self, model, entity_id):
+    def build_component(self, entity_id, model):
         #  Set the `label` attribute so it is set
         #  to the `name` attribute for the model
         self.label = model.name
         
         # Return the output from the
         # parent class's build_component method
-        return super().build_component(model, entity_id)
+        return super().build_component(entity_id, model)
     
     # Overwrite the `component_data` method
     # Ensure the method uses the same parameters
     # as the parent class method
-    def component_data(self, model, entity_id):
+    def component_data(self, entity_id, model):
         # Using the model argument
         # call the employee_events method
         # that returns the user-type's
         # names and ids
-        return model.employee_events(entity_id)
+        return model.names()
 
 
 # Create a subclass of base_components/BaseComponent
@@ -57,12 +57,14 @@ class Header(BaseComponent):
     # Overwrite the `build_component` method
     # Ensure the method has the same parameters
     # as the parent class
-    def build_component(self, model):
+    def build_component(self, entity_id, model):
         
         # Using the model argument for this method
         # return a fasthtml H1 objects
         # containing the model's name attribute
-        return H1(model.name, cls='header')
+        title = 'Employee Performance' if model.name == 'employee' else 'Team Performance'
+        return H1(title, cls='header')
+
           
 
 # Create a subclass of base_components/MatplotlibViz
@@ -84,7 +86,7 @@ class LineChart(MatplotlibViz):
         
         # User the pandas .set_index method to set
         # the date column as the index
-        df.set_index('date', inplace=True)
+        df.set_index('event_date', inplace=True)
         
         # Sort the index
         df.sort_index(inplace=True)
@@ -114,12 +116,14 @@ class LineChart(MatplotlibViz):
         # the border color and font color to black. 
         # Reference the base_components/matplotlib_viz file 
         # to inspect the supported keyword arguments
-        fig.set_axis_styling(ax, bordercolor='black', fontcolor='black')
+        self.set_axis_styling(ax, bordercolor='black', fontcolor='black')
         
         # Set title and labels for x and y axis
         ax.set_title('Cumulative Employee Events', fontsize=20)
         ax.set_xlabel('Date', fontsize=14)
         ax.set_ylabel('Event Count', fontsize=14)
+        
+        return fig
 
 
 # Create a subclass of base_components/MatplotlibViz
@@ -175,7 +179,8 @@ class BarChart(MatplotlibViz):
         # pass the axis variable
         # to the `.set_axis_styling`
         # method
-        ax.set_axis_styling(ax, bordercolor='black', fontcolor='black')
+        self.set_axis_styling(ax, bordercolor='black', fontcolor='black')
+        return fig
  
 # Create a subclass of combined_components/CombinedComponent
 # called Visualizations       
@@ -196,7 +201,7 @@ class NotesTable(DataTable):
 
     # Overwrite the `component_data` method
     # using the same parameters as the parent class
-    def component_data(self, model, entity_id):
+    def component_data(self, entity_id, model):
         
         # Using the model and entity_id arguments
         # pass the entity_id to the model's .notes 
