@@ -6,7 +6,7 @@ from .sql_execution import QueryMixin
 
 # Define a subclass of QueryBase
 # called Employee
-class Employee(QueryBase, QueryMixin):
+class Employee(QueryBase):
 
     # Set the class attribute `name`
     # to the string "employee"
@@ -26,9 +26,12 @@ class Employee(QueryBase, QueryMixin):
         # This query should return the data
         # for all employees in the database
         query = f"""
-        SELECT full_name, employee_id
-        FROM {self.name};
-        """
+                    SELECT
+                        CONCAT(first_name,' ', last_name) as full_name,
+                        employee_id
+                    FROM
+                       employee
+                """
         
         return self.query(query)
     
@@ -46,9 +49,9 @@ class Employee(QueryBase, QueryMixin):
         # to only return the full name of the employee
         # with an id equal to the id argument
         query = f"""
-        SELECT full_name
-        FROM {self.name}
-        WHERE employee_id = {id};
+            SELECT CONCAT(first_name,' ', last_name) as full_name
+            FROM employee
+            WHERE employee_id = {id}
         """
         
         return self.query(query)
