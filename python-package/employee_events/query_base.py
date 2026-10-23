@@ -30,15 +30,15 @@ class QueryBase(QueryMixin):
         # Use f-string formatting to set the name
         # of id columns used for joining
         # order by the event_date column
-        event_counts_query = f"""
-        SELECT event_date,
-               SUM(CASE WHEN event_type = 'positive' THEN 1 ELSE 0 END) AS positive_count,
-               SUM(CASE WHEN event_type = 'negative' THEN 1 ELSE 0 END) AS negative_count
-        FROM {self.name}
-        WHERE {self.name}_id = {id}
-        GROUP BY event_date
-        ORDER BY event_date;
-        """
+        event_counts_query = f'''
+            SELECT event_date,
+                SUM(positive_events) AS positive_events,
+                SUM(negative_events) AS negative_events
+            FROM employee_events
+            WHERE {self.name}_id = {id}
+            GROUP BY event_date
+            ORDER BY event_date;
+            '''
         
         return self.pandas_query(event_counts_query)
             
