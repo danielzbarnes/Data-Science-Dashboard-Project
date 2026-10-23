@@ -8,8 +8,7 @@ class QueryBase(QueryMixin):
 
     # Create a class attribute called `name`
     # set the attribute to an empty string
-    def __init__(self):
-        self.name = ""
+    name = ""
 
     # Define a `names` method that receives
     # no passed arguments
